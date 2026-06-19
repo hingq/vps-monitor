@@ -1,0 +1,23 @@
+# golangci-lint 配置 — 运行: golangci-lint run ./...
+# 安装: brew install golangci-lint
+run:
+  timeout: 3m
+
+linters:
+  enable:
+    - errcheck      # 检查未处理的 error 返回值
+    - govet         # go vet 静态检查
+    - ineffassign   # 无效赋值
+    - staticcheck   # 高级静态分析
+    - unused        # 未使用的代码
+    - gofmt         # gofmt 格式检查
+    - goimports     # import 分组与排序
+    - misspell      # 拼写错误
+    - revive        # 风格与命名建议
+
+issues:
+  exclude-rules:
+    # 测试文件放宽 errcheck（fake 实现里大量忽略返回值）
+    - path: _test\.go
+      linters:
+        - errcheck

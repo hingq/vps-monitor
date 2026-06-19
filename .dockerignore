@@ -1,0 +1,17 @@
+.git
+.gitignore
+.golangci.yml
+.env
+.env.example
+
+# 本地编译产物
+main
+vps
+
+# 文档无需进构建上下文
+*.md
+docs/
+
+# 部署文件本身
+Dockerfile
+docker-compose.yml

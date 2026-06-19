@@ -1,0 +1,19 @@
+services:
+  vps-monitor:
+    build: .
+    container_name: vps-monitor
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # 覆盖 config.go 默认的 127.0.0.1:8090，容器内须监听全部网卡才能被宿主访问。
+      WEB_LISTEN: ":8080"
+      # 每小时流量落盘到挂载卷，重启不丢失。
+      HOURLY_DATA_FILE: /data/hourly.json
+    ports:
+      - "${HOST_PORT:-8080}:8080"
+    volumes:
+      # 持久化每小时流量数据（appuser uid=10001 需对该卷有写权限）。
+      - hourly-data:/data
+
+volumes:
+  hourly-data:

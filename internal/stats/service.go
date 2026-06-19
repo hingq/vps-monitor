@@ -21,7 +21,7 @@ func NewService(client command.StatsServiceClient) *Service {
 	return &Service{client: client}
 }
 
-// ---------- gRPC 方法的 1:1 封装 ----------
+// ---------- gRPC ----------
 
 // SysStats 调用 GetSysStats 并转换为 JSON 结构体。
 func (s *Service) SysStats(ctx context.Context) (*SysStatsJSON, error) {

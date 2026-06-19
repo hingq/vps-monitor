@@ -39,3 +39,28 @@ func requireParam(w http.ResponseWriter, r *http.Request, key string) (string, b
 	}
 	return v, true
 }
+
+// decodeJSON 解析请求 body 到 dst；失败时写出 400 并返回 ok=false。
+func decodeJSON(w http.ResponseWriter, r *http.Request, dst interface{}) bool {
+	if err := json.NewDecoder(r.Body).Decode(dst); err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "无效的 JSON body: " + err.Error()})
+		return false
+	}
+	return true
+}
+
+// requireToken 包裹一个 handler，校验 Authorization: Bearer <adminToken>。
+// adminToken 未配置或不匹配时返回 403，handler 不会被调用。
+func (s *Server) requireToken(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if s.adminToken == "" {
+			writeJSON(w, http.StatusForbidden, map[string]string{"error": "写操作未启用：未配置 ADMIN_TOKEN"})
+			return
+		}
+		if r.Header.Get("Authorization") != "Bearer "+s.adminToken {
+			writeJSON(w, http.StatusForbidden, map[string]string{"error": "无效或缺失的鉴权 token"})
+			return
+		}
+		next(w, r)
+	}
+}
