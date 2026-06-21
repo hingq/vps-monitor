@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// 抠自 xray-core common/serial/typed_message.proto。package 名必须保持
+// xray.common.serial 不变——它决定 TypedMessage 里 type 字段的全名匹配。
+package xray.common.serial;
+option go_package = "vps/internal/xrayapi/common/serial;serial";
+
+// TypedMessage 是序列化后的 proto 消息及其类型全名。
+message TypedMessage {
+  // 消息类型的全名（protobuf FullName）。
+  string type = 1;
+  // 序列化后的 proto 消息字节。
+  bytes value = 2;
+}

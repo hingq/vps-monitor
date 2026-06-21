@@ -3,3 +3,4 @@ vps
 main
 .env
 data/
+*.tar
